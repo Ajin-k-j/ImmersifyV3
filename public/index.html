@@ -4,19 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Immersify</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="../static/read.css"> <!-- Use read.css here -->
 </head>
 <body>
-    <div class="app">
-        <h1>Immersify</h1>
-        <div id="input-section">
-            <textarea id="story-input" placeholder="Enter your story here..."></textarea>
-            <button id="process-btn">Get Immersified</button>
-            <div id="loading" class="hidden">Processing...</div>
-        </div>
-        <div id="output-section" class="hidden">
-            <div id="story-output"></div>
-        </div>
+    <div class="app-container">
+        <header>
+            <h1>Immersify</h1>
+        </header>
+        <main>
+            <div class="input-container">
+                <textarea id="story-input" placeholder="Enter your story here..."></textarea>
+                <button id="process-btn">Get Immersified</button>
+            </div>
+            <div id="loading" class="loading-container hidden">
+                <div class="circular-progress">
+                    <div class="spinner"></div>
+                </div>
+                <span class="loading-text">Processing your story...</span>
+            </div>
+        </main>
     </div>
     <script src="/static/scripts.js"></script>
 </body>

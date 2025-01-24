@@ -12,25 +12,24 @@ const client = new BedrockRuntimeClient({
     },
 });
 
-// Helper function to extract sound-producing words and sentiment from text response
-const extractSoundWordsAndSentiment = (responseText) => {
+// Helper function to extract sound-producing words from text response
+const extractSoundWords = (responseText) => {
     try {
-        // Improved pattern: allow for spaces, punctuation, and multi-word sentiment
-        const soundPattern = /Sound:\s*([a-zA-Z0-9\s\-\',]+)\s*,\s*Sentiment:\s*([a-zA-Z\s]+)/;
+        // Updated pattern: extract only sound-producing words from "Sound: [words]"
+        const soundPattern = /Sound:\s*([a-zA-Z0-9\s\-\',]+)/;
         const match = responseText.match(soundPattern);
 
         if (match) {
             // Extract sound-producing words, split by commas, and trim extra spaces
-            const soundWords = match[1].split(',').map(word => word.trim());
-            const sentiment = match[2].trim();
-            return { soundWords, sentiment };
+            const soundWords = match[1].split(',').map(word => word.trim()).filter(word => word); // Filter out any empty strings
+            return { soundWords };
         } else {
-            console.error('Failed to parse sound and sentiment:', responseText);
-            return { soundWords: [], sentiment: 'neutral' }; // Default sentiment if not found
+            console.error('Failed to parse sound words:', responseText);
+            return { soundWords: [] }; // Return an empty array if no sound words are found
         }
     } catch (error) {
         console.error('Error parsing response:', error);
-        return { soundWords: [], sentiment: 'neutral' }; // Default sentiment if error occurs
+        return { soundWords: [] }; // Return an empty array if error occurs
     }
 };
 
@@ -59,7 +58,7 @@ const identifySoundWords = async (text) => {
                 content: [
                     {
                         type: "text", // Content type, text is used here
-                        text: `Extract and return only the sound-producing words and the sentiment from the following sentence: "${text}". Sound-producing words include animal sounds (e.g., lion, cat), natural sounds (e.g., rain, thunder), and other sounds (e.g., baby crying, crash). Even if only the name of an animal or sound is mentioned, it should be picked up as a sound-producing word. Format the response as: Sound: [sound-producing words], Sentiment: [sentiment]. Ensure the output is accurate and follows the specified format.`
+                        text: `Extract and return only the sound-producing words from the following sentence: "${text}". Sound-producing words include animal sounds (e.g., lion, cat), natural sounds (e.g., rain, thunder), and other sounds (e.g., baby crying, crash). Even if only the name of an animal or sound is mentioned, it should be picked up as a sound-producing word. Format the response as: Sound: [sound-producing words]. Ensure the output is accurate and follows the specified format.`
                     }
                 ]
             }
@@ -89,4 +88,4 @@ const identifySoundWords = async (text) => {
     }
 };
 
-module.exports = { identifySoundWords, extractSoundWordsAndSentiment, splitIntoChunks };
+module.exports = { identifySoundWords, extractSoundWords, splitIntoChunks };

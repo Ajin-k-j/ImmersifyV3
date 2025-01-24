@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const { identifySoundWords, extractSoundWordsAndSentiment, splitIntoChunks } = require('./utils/textProcessing');
+const { identifySoundWords, extractSoundWords, splitIntoChunks } = require('./utils/textProcessing');
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
@@ -15,17 +15,15 @@ app.post('/process', async (req, res) => {
     const chunks = splitIntoChunks(story, 6); // Split the story into 6-word chunks
     const enrichedStory = [];
     const allSounds = new Set();
-    let overallSentiment = 'neutral';
 
     for (const chunk of chunks) {
         try {
-            // Get sound words and sentiment for the chunk
+            // Get sound words for the chunk (we no longer need sentiment)
             const result = await identifySoundWords(chunk);
-            const { soundWords, sentiment } = extractSoundWordsAndSentiment(result);
+            const { soundWords } = extractSoundWords(result);
 
-            // Add sound-producing words and sentiment to the overall tracking
+            // Add sound-producing words to the overall tracking
             soundWords.forEach(sound => allSounds.add(sound));
-            if (sentiment) overallSentiment = sentiment;
 
             enrichedStory.push(chunk);
         } catch (error) {
@@ -45,7 +43,8 @@ app.post('/process', async (req, res) => {
         );
     });
 
-    res.json({ story: highlightedStory, overallSentiment });
+    // Send back the enriched story without the sentiment information
+    res.json({ story: highlightedStory });
 });
 
 // Start server

@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const storyInput = document.getElementById('story-input');
     const processBtn = document.getElementById('process-btn');
     const loading = document.getElementById('loading');
-    const outputSection = document.getElementById('output-section');
-    const storyOutput = document.getElementById('story-output');
 
     // Event listener for button click
     processBtn.addEventListener('click', handleProcessClick);
@@ -16,24 +14,23 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        showLoading(true);
-        outputSection.classList.add('hidden');
+        // Show loading animation on current page
+        loading.classList.remove('hidden');
 
         try {
             const data = await processStory(story);
-            updateStoryOutput(data);
+
+            // Save the processed story in localStorage
+            localStorage.setItem('processedStory', data.story);
+
+            // Redirect to 'read.html' page
+            window.location.href = 'read.html';
         } catch (error) {
             console.error('Error processing story:', error);
             alert('Something went wrong, please try again.');
+        } finally {
+            loading.classList.add('hidden');
         }
-
-        showLoading(false);
-        outputSection.classList.remove('hidden');
-    }
-
-    // Function to show or hide the loading indicator
-    function showLoading(isLoading) {
-        loading.classList.toggle('hidden', !isLoading);
     }
 
     // Function to fetch processed story data
@@ -49,31 +46,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         return response.json();
-    }
-
-    // Function to update the story output with highlighted sound words
-    function updateStoryOutput(data) {
-        storyOutput.innerHTML = '';
-
-        // Since data.story is a string, we'll split it into paragraphs
-        const paragraphs = data.story.split('\n'); // Split by newline or another delimiter if needed
-
-        paragraphs.forEach((paragraphText) => {
-            const paragraph = document.createElement('p');
-            paragraph.innerHTML = `${paragraphText} <span class="sentiment">(${data.overallSentiment})</span>`;
-            storyOutput.appendChild(paragraph);
-        });
-
-        // Attach click handlers for sound words
-        document.querySelectorAll('.sound-word').forEach((element) => {
-            element.addEventListener('click', handleSoundWordClick);
-        });
-    }
-
-    // Function to handle sound word click (play sound)
-    function handleSoundWordClick(event) {
-        const soundPath = event.target.getAttribute('data-sound');
-        const audio = new Audio(soundPath);
-        audio.play();
     }
 });
