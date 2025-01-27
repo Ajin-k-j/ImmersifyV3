@@ -82,3 +82,9 @@ button:hover {
 .start-reading:hover {
     background-color: #218838;
 }
+
+/* read.css */
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+}
