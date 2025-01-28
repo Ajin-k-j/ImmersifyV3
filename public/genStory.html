@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immersify - Generate Story</title>
+    <link rel="stylesheet" href="../static/genStory.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Immersify</h1>
+            <h2>Let AI Create a Story Based on Your Imagination</h2>
+        </header>
+        <main>
+            <div class="input-container">
+                <textarea id="context-input" placeholder="Optional: Provide some context for the story..."></textarea>
+                <!-- Loading text, initially hidden -->
+                <p id="loading-text" class="loading-text" style="display:none;">Generating your story...</p>
+                <button id="genStory-btn">Generate Story</button>
+            </div>
+        </main>
+    </div>
+    <script src="/static/genStory.js"></script>
+</body>
+</html>
